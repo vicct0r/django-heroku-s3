@@ -1,25 +1,29 @@
 # Central de Atendimento ao Estudante v2
 
-## Refatoração do projeto CAE 
-Este repositório é uma **versão independente** do repositório **Cae_** que está em fase de **testes**. Uma vez que eu terminar de configurá-lo corretamente existirá apenas um repositório do projeto com 2 branchs diferentes.
+## Refatoração do Projeto CAE
+
+Este repositório é uma **versão finalizada** do repositório [Cae_](https://github.com/vicct0r/Cae_), que foi anteriormente desenvolvido. Esta versão apresenta uma configuração otimizada para atender às necessidades do projeto.
 
 ## Objetivo
-No projeto inicial, eu estava usando as seguintes tecnologias para o commit: `dj-static` `gunicorn` `heroku` para que projeto pudesse servir arquivos estáticos e de mídia. 
 
-Entretanto, os arquivos quando publicados desta forma são perdidos após um período de tempo, toda vez que um dyno reseta no Heroku, ele faz com que eu perca todos os arquivos de mídia que eu tinha inserido no projeto em produção.
+O projeto inicial utilizava as seguintes tecnologias: `dj-static`, `gunicorn` e `Heroku` para servir arquivos estáticos e de mídia. No entanto, os arquivos publicados desta forma eram perdidos após um período, toda vez que um dyno no Heroku era reiniciado, resultando na perda de todos os arquivos de mídia inseridos no projeto em produção.
 
-Este projeto visa uma alternativa diferente para servir os arquivos, utilizando `django-heroku` `boto3` `django-storages` `AWS S3` `Heroku`
+Este projeto busca uma alternativa robusta para o armazenamento de arquivos, utilizando `django-heroku`, `boto3`, `django-storages`, `AWS S3` e `Heroku`. O objetivo é garantir que os arquivos sejam armazenados em um **bucket** do **S3** e apresentados corretamente na aplicação hospedada no **Heroku**.
 
-Basicamente consiste em fazer com que os arquivos fiquem armazenados em um **bucket** do **S3** e sejam apresentados corretamente na aplicação **Heroku**. 
+## Estrutura de Configuração
 
-## Observação
-Foi necessário refatorar o projeto pois agora estou fazendo o uso de `settings.py` de uma forma diferente; Consiste em criar um diretório para `settings/` com a seguinte estrutura:
+Para melhor gerenciar as configurações de ambiente, o projeto foi refatorado para incluir um diretório `settings/` com a seguinte estrutura:
 
     settings/
         base.py
         prod.py
         dev.py
 
-Isso me permite ter controle da configuração do ambiente para **localhost** e para **produção**.
 
-Se este repositório ainda existe isso significa que eu ainda estou buscando por uma solução consistente para configurar corretamente meu projeto.
+Essa organização permite um controle eficiente das configurações para **localhost** e **produção**.
+
+## Observação
+
+Se este repositório está ativo, significa que o projeto foi finalizado e está utilizando as tecnologias mencionadas de forma eficaz. Para visualizar a aplicação em funcionamento, você pode acessar o link abaixo:
+
+[Aplicação CAE publicada](https://sistema-cae-v5-ecab78bbbd3c.herokuapp.com/)
