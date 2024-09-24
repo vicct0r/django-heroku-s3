@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'eventos',
     'professor',
     'core',
+    'whitenoise.runserver_nostatic',
     
 ]
 
