@@ -1,0 +1,95 @@
+{% extends 'index.html' %}
+{% block title %}Armários{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Armários Disponíveis</h2>
+
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endif %}
+        {% if message.tags == 'error' %}
+            <div class="alert alert-warning" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Chave</th>
+                <th>Disponibilidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for armario in object_list %}
+            <tr>
+                <th scope="row">{{ armario.id }}</th>
+                <td>{{ armario.chave_string }}</td>
+                <td>
+                    {% if armario.disponivel %}
+                        <span class="badge bg-success">Disponível</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Indisponível</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if armario.disponivel %}
+                        <form action="{% url 'emprestimo_armario' pk=armario.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Pegar" class="btn btn-success btn-sm">
+                        </form>
+                    {% else %}
+                        <button class="btn btn-danger btn-sm" disabled>Pegar</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhum armário disponível encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="mt-4">Armários Emprestados</h2>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Chave</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if emprestimos %}
+                {% for emprestimo in emprestimos %}
+                <tr>
+                    <td>{{ emprestimo.armario.chave_string }}</td>
+                    <td>
+                        <span class="badge bg-warning">Emprestado</span>
+                    </td>
+                    <td>
+                        <form action="{% url 'devolver' pk=emprestimo.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Devolver" class="btn btn-success btn-sm">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Você não tem armários emprestados.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

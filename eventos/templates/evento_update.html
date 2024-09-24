@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+
+{% block title %}Evento - Create{% endblock %}
+
+{% block content %}
+<h3>Formulário do evento</h3>
+<form action="." method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="salvar">
+</form>
+
+{% endblock %}

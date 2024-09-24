@@ -1,0 +1,66 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+    <h1 class="mb-4">Painel de Administração</h1>
+
+    <div class="row justify-content-center">
+        <!-- Card para Alunos -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card text-center h-100">
+                <img src="{% static 'images/discussion.png' %}" class="card-img-top icon-size" alt="Imagem de Alunos">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gerenciar Alunos</h5>
+                    <div class="mt-auto">
+                        <a href="{% url 'listagem_alunos' %}" class="btn btn-primary mb-2 w-100">Listar Alunos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Eventos -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card text-center h-100">
+                <img src="{% static 'images/memo.png' %}" class="card-img-top icon-size" alt="Imagem de Eventos">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gerenciar Eventos</h5>
+                    <div class="mt-auto">
+                        <a href="{% url 'evento_admin' %}" class="btn btn-primary mb-2 w-100">Listar Eventos</a>
+                        <a href="{% url 'evento_create' %}" class="btn btn-success w-100">Adicionar Novo Evento</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Armários -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card text-center h-100">
+                <img src="{% static 'images/lockers.png' %}" class="card-img-top icon-size" alt="Imagem de Armários">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gerenciar Armários</h5>
+                    <div class="mt-auto">
+                        <a href="{% url 'lista_armarios' %}" class="btn btn-primary mb-2 w-100">Listar Armários</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card para Livros -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card text-center h-100">
+                <img src="{% static 'images/book.png' %}" class="card-img-top icon-size" alt="Imagem de Livros">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gerenciar Livros</h5>
+                    <div class="mt-auto">
+                        <a href="{% url 'livros' %}" class="btn btn-primary mb-2 w-100">Listar Livros</a>
+                        <a href="{% url 'livros_add' %}" class="btn btn-success w-100">Adicionar Novo Livro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

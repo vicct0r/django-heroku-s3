@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+{% block title %}Ficha {{ aluno.usuario.nome_completo }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Coluna da Imagem de Perfil -->
+        <div class="col-md-4 text-center">
+            <div class="card shadow-sm">
+                <img src="{{ aluno.img.url }}" alt="Foto de Perfil" class="card-img-top img-fluid rounded mb-4" style="max-width: 100%; height: auto; border: 2px solid #ddd;">
+                <div class="card-body">
+                    <h3 class="card-title">{{ aluno.usuario.nome_completo }}</h3>
+                    <p class="text-muted">@{{ aluno.usuario.username }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna das Informações do Aluno -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5>Informações do Aluno</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Curso:</strong> {{ aluno.curso }}</p>
+                    <p><strong>Turno:</strong> {{ aluno.turno }}</p>
+                </div>
+            </div>
+
+            <!-- Detalhes do Empréstimo -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5>Detalhes de Empréstimos</h5>
+                </div>
+                <div class="card-body">
+                    {% if emprestimo %}
+                        <p><strong>Status:</strong> <span class="badge bg-success">Ativo</span></p>
+                        <ul class="list-unstyled">
+                            {% for emp in emprestimo %}
+                                <li><strong>Prazo restante:</strong> {{ emp.prazo_devolucao }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Aluno não possui nenhum empréstimo no momento.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

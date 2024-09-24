@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+
+{% block title %}Evento - Create{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h3>Formulário do evento</h3>
+    <form action="." method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Salvar">
+        </div>
+    </form>
+</div>
+{% endblock %}

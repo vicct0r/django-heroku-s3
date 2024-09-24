@@ -1,0 +1,74 @@
+{% extends 'index.html' %}
+
+{% block title %}Perfil {{ user.username }}{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endif %}
+        {% if message.tags == 'error' %}
+            <div class="alert alert-warning" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endif %}
+        {% endfor %}
+        
+        <!-- Sidebar com a foto do perfil -->
+        <div class="col-md-4 text-center">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Foto do usuário -->
+                    <img src="{{ profile.img.url }}" alt="Foto de {{ user.username }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;">
+                    <h4 class="card-title">{{ user.username }}</h4>
+                    <p class="text-muted">{{ usuario.is_funcionario }}</p> <!-- Exemplo de função do usuário -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Conteúdo principal com informações do usuário -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Informações do Perfil</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Informações pessoais -->
+                    <p><strong>Nome Completo:</strong> {{ user.nome_completo }}</p>
+                    <p><strong>Data de Cadastro:</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
+                    
+                    <!-- Informações específicas do perfil -->
+                    {% if user.is_funcionario %}
+                        <p><strong>Formação:</strong> {{ profile.especialidade }}</p>
+                    {% else %}
+                        <p><strong>Curso:</strong> {{ profile.curso }}</p>
+                        <p><strong>Turno:</strong> {{ profile.turno }}</p>
+                    {% endif %}
+                    
+                    <!-- Verificação de empréstimo -->
+                    <h5 class="mt-4">Chave: </h5>
+                    {% if emprestimo.exists %}
+                        <ul>
+                            {% for emp in emprestimo %}
+                                <li><strong>Prazo restante:</strong> {{ emp.prazo_devolucao }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Você não possui nenhum empréstimo no momento.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'my_account_update' user.pk %}" class="btn btn-primary">Editar Conta</a>
+                    <a href="{% url 'my_profile_update' user.pk %}" class="btn btn-secondary">Editar Perfil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

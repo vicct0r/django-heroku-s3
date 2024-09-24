@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Alunos</h2>
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endif %}
+    {% endfor %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome Completo</th>
+                <th>curso</th>
+                <th>Turno</th>
+                <th>Ações</th> <!-- Coluna para os botões -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for aluno in alunos %}
+            <tr id="row{{ aluno.id }}">
+                <td>{{ aluno.usuario.id }}</td>
+                <td><a href="{% url 'detalhe_aluno' aluno.id %}">{{ aluno.usuario.nome_completo }}</a></td>
+                <td>{{ aluno.curso }}</td>
+                <td>{{ aluno.turno }}</td>
+                <td>
+                    <div class="row">
+                        <div class="col-auto">
+                            <a href="{% url 'editar_aluno' aluno.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        </div>
+                        <div class="col-auto">
+                            <form action="{% url 'deletar_aluno' aluno.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="Apagar" class="btn btn-danger btn-sm">
+                            </form>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

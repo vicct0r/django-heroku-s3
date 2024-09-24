@@ -1,0 +1,35 @@
+{% extends 'index.html' %}
+
+{% block title %}Evento {{ evento.nome }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <!-- Imagem da logo do evento -->
+            {% if evento.logo %}
+            <img src="{{ evento.logo.url }}" alt="Logo" class="img-fluid mx-auto d-block">
+            {% else %}
+            <p>Sem logo disponível</p>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <!-- Informações do evento -->
+            <h2>{{ evento.nome }}</h2>
+            <p><strong>Status:</strong> <span class="text-success">{{ evento.get_status_display }}</span></p>
+            <!-- Adicionando a classe text-break aqui -->
+            <p><strong>Descrição:</strong> <span class="d-block text-break">{{ evento.descricao }}</span></p>
+            <p><strong>Local:</strong> {{ evento.local }}</p>
+            <p><strong>Data:</strong> {{ evento.data|date:"d/m/Y H:i" }}</p>
+            <p><strong>Duração:</strong> {{ evento.duracao }}</p>
+            <p><strong>Palestrantes:</strong>
+                {% if evento.palestrantes.exists %}
+                {{ evento.palestrantes.all|join:", " }}
+                {% else %}
+                Não há palestrantes cadastrados.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
