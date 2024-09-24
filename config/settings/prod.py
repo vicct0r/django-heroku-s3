@@ -31,7 +31,6 @@ STORAGES = {
     }
 }
 
-
 # Heroku Loggin
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
