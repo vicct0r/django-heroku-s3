@@ -23,12 +23,13 @@ Esta versão do projeto busca uma alternativa robusta para o armazenamento de ar
 
 Para melhor gerenciar as configurações de ambiente, o projeto foi refatorado para incluir um diretório `settings/` com a seguinte estrutura:
 
-settings/ 
-├── init.py 
-├── base.py 
-├── local.py 
+```
+settings/
+├── __init__.py
+├── base.py
+├── local.py
 └── production.py
-
+```
 
 Essa organização permite um controle eficiente das configurações para **localhost** e **produção**.
 
