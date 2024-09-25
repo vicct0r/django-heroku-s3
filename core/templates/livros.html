@@ -1,8 +1,30 @@
-{% extends 'index.html' %}  
+{% extends 'index.html' %}
 
 {% block content %}
 <div class="container my-5">
-    <h1 class="text-center mb-4">Livros Disponíveis</h1>
+    
+    <!-- Exibição de mensagens -->
+    {% if messages %}
+        <div class="row mb-4">
+            <div class="col-12">
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Título e botão "Adicionar Livro" -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-center mb-0">Livros Disponíveis</h1>
+        {% if user.is_funcionario %}
+            <a href="{% url 'livros_add' %}" class="btn btn-success">Adicionar Livro</a>
+        {% endif %}
+    </div>
+
     <div class="row">
         {% for livro in livros %}
             <div class="col-md-4 mb-4">

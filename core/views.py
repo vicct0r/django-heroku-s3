@@ -89,7 +89,7 @@ class MyProfileUpdateView(LoginRequiredMixin, UserProfilePictureMixin, UpdateVie
         # desta forma eu consigo encontrar o objeto relacionado com a conta de usuario sem nenhum problema.
 
     def form_valid(self, form):
-        messages.success(self.request, 'Informações de perfil alterados com sucesso!')
+        messages.success(self.request, 'Informações de perfil alterado com sucesso!')
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -108,6 +108,12 @@ class LivrosCreate(LoginRequiredMixin, HasRoleMixin, CreateView):
     template_name = 'livro_add.html'
     form_class = LivrosModelForm
     success_url = reverse_lazy('livros')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Livro adicionado com sucesso!')
+        return response
+
 
 
 class LivroUpdate(LoginRequiredMixin, HasRoleMixin, UpdateView):
