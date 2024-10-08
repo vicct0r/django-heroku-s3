@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+
+{% block title %}
+Detalhes da Pergunta
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Detalhes da Pergunta</h1>
+
+    <!-- Seção da pergunta -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <img src="{{ autor_pergunta_info.img_url }}" class="rounded-circle me-3" width="60" height="60" alt="Imagem do Usuário">
+                <div>
+                    <h5 class="card-title">{{ autor_pergunta_info.nome_completo }} ({{ autor_pergunta_info.tipo }})</h5>
+                </div>
+            </div>
+            <hr>
+            <p class="card-text">{{ pergunta.texto }}</p>
+        </div>
+    </div>
+
+    <!-- Seção das respostas -->
+    <h3>Respostas</h3>
+    {% for resposta in respostas_info %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <img src="{{ resposta.autor_info.img_url }}" class="rounded-circle me-3" width="60" height="60" alt="Imagem do Usuário">
+                <div>
+                    <h5 class="card-title">{{ resposta.autor_info.nome_completo }} ({{ resposta.autor_info.tipo }})</h5>
+                </div>
+            </div>
+            <hr>
+            <p class="card-text">{{ resposta.resposta_texto }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'professor',
     'core',
     'whitenoise.runserver_nostatic',
+    'faq',
     
 ]
 

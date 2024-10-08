@@ -10,6 +10,7 @@ django-stdimage==6.0.2
 django-storages==1.14.4
 gunicorn==23.0.0
 jmespath==1.0.1
+model-mommy==2.0.0
 packaging==24.1
 pillow==10.4.0
 psycopg2==2.9.9

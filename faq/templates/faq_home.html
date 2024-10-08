@@ -1,0 +1,57 @@
+{% extends 'index.html' %}
+
+{% block title %}
+    FAQ - Perguntas
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>FAQ - Perguntas</h1>
+
+    <!-- Sessão para criar uma nova pergunta -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Criar Nova Pergunta</h2>
+            <form action="{% url 'faq_pergunta' %}" method="post" class="form-inline">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary btn-lg">Criar Pergunta</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de tópicos de perguntas -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Tópicos Recentes</h2>
+            <ul class="list-group">
+                {% for topico in perguntas %}
+                    <li class="list-group-item mb-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <!-- Link para a pergunta -->
+                            <a href="{% url 'faq_detalhe' topico.pk %}" class="text-decoration-none">
+                                <strong>{{ topico.assunto }}</strong>
+                            </a>
+
+                            <!-- Data da pergunta -->
+                            <span class="text-muted">{{ topico.data|date:"d/m/Y H:i" }}</span>
+                        </div>
+
+                        <!-- Informações do autor e número de respostas -->
+                        <div class="mt-2">
+                            <span class="text-muted">
+                                Pergunta feita por: <strong>{{ user.username }}</strong>
+                            </span>
+                            <span class="badge badge-secondary float-right">
+                                {{ topico.respostas.count }} respostas
+                            </span>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Nenhuma pergunta encontrada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
