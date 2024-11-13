@@ -1,27 +1,28 @@
-# Student Support Center v2
+# Centro de Atendimento ao Estudante v2
 
-## CAE Project Refactor
+## Refatoração do Projeto CAE
 
-This repository is a **production version** of the previously developed [Cae_](https://github.com/vicct0r/Cae_) project. This version presents an optimized setup to meet the project's needs.
+Este repositório é uma **versão de produção** do projeto [Cae_](https://github.com/vicct0r/Cae_) previamente desenvolvido. Esta versão apresenta uma configuração otimizada para atender às necessidades do projeto.
 
-## Objective
+## Objetivo
 
-The initial project used technologies such as `dj-static`, `gunicorn`, and `Heroku` to serve static and media files. However, files published this way were lost after a certain period, whenever a dyno on Heroku was restarted, resulting in the loss of all media files uploaded to the application in production.
+O projeto inicial utilizava tecnologias como `dj-static`, `gunicorn` e `Heroku` para servir arquivos estáticos e de mídia. No entanto, os arquivos publicados dessa maneira eram perdidos após certo tempo, sempre que um dyno no Heroku era reiniciado, resultando na perda de todos os arquivos de mídia enviados para a aplicação em produção.
 
-This version of the project seeks a robust alternative for file storage using `django-heroku`, `boto3`, `django-storages`, `AWS S3`, and `Heroku`. The goal is to ensure that files are stored in an **S3 bucket** and properly displayed in the application hosted on **Heroku**.
+Esta versão do projeto busca uma alternativa robusta para armazenamento de arquivos utilizando `django-heroku`, `boto3`, `django-storages`, `AWS S3` e `Heroku`. O objetivo é garantir que os arquivos sejam armazenados em um **bucket S3** e exibidos corretamente na aplicação hospedada no **Heroku**.
 
-## Technologies Used
+## Tecnologias Utilizadas
 
-- **Django**: Web framework used for system development.
-- **AWS S3**: Storage for static and media files.
-- **Heroku**: Hosting platform.
-- **django-heroku**: Integration of Django with Heroku.
-- **boto3**: AWS SDK for Python.
-- **django-storages**: Extension to manage file storage.
+- **Django**: Framework web utilizado para o desenvolvimento do sistema.
+- **AWS S3**: Armazenamento para arquivos estáticos e de mídia.
+- **Heroku**: Plataforma de hospedagem.
+- **django-heroku**: Integração do Django com Heroku.
+- **boto3**: SDK da AWS para Python.
+- **django-storages**: Extensão para gerenciamento de armazenamento de arquivos.
 
-## Configuration Structure
+## Estrutura de Configuração
 
-To better manage environment settings, the project was refactored to include a `settings/` directory with the following structure:
+Para gerenciar melhor as configurações de ambiente, o projeto foi refatorado para incluir um diretório `settings/` com a seguinte estrutura:
+
 
 
 ```
@@ -32,40 +33,35 @@ settings/
 └── production.py
 ```
 
+Essa organização permite um controle eficiente das configurações para os ambientes de **localhost** e **produção**.
 
-This organization allows efficient control of settings for both **localhost** and **production** environments.
+## Contribuições
 
-## Contributions
+### Diretrizes de Colaboração
 
-### Collaboration Guidelines
+Para aqueles que têm interesse em contribuir com este projeto, é importante observar que há várias áreas que precisam de atenção. Atualmente, não possuo um diagrama atualizado que reflita a arquitetura do projeto. No entanto, há várias áreas onde melhorias são bem-vindas:
 
-For those interested in contributing to this project, it is important to note that several areas need attention. Currently, I do not have an up-to-date diagram that reflects the project architecture. However, there are several areas where improvements are welcome:
+- **Correção de Bugs**: Identificar e corrigir problemas na lógica do backend.
+- **Responsividade**: Melhorar a apresentação visual e a experiência do usuário em diferentes dispositivos.
+- **Desempenho**: Investigar e implementar maneiras de otimizar os tempos de resposta do sistema e reduzir a latência.
 
-- **Bug Fixes**: Identifying and fixing backend logic issues.
-- **Responsiveness**: Improving the visual presentation and user experience across different devices.
-- **Performance**: Investigating and implementing ways to optimize system response times and reduce latency.
+### Instruções para Pull Request
 
-### Pull Request Instructions
+Se você decidir contribuir com o projeto, certifique-se de que suas contribuições estejam bem organizadas. É essencial destacar:
 
-If you decide to contribute to the project, please ensure that your contributions remain well-organized. It is essential to highlight:
+- As principais mudanças que você fez.
+- Se foram incluídos testes, forneça-os.
+- Detalhes sobre os bugs que você corrigiu e a lógica por trás das mudanças.
 
-- The main changes you made.
-- If tests were included, please provide them.
-- Details about the bugs you fixed and the logic behind the changes.
+Essa abordagem facilitará o entendimento das suas contribuições e permitirá um processo de revisão mais eficiente.
 
-This approach will facilitate understanding your contributions and allow for a more efficient review process.
+## Aviso Importante
 
-## Important Notice
+O código atualmente está escrito em português, mas estou realizando uma transição parcial para o inglês para possibilitar a participação de novos colaboradores no projeto no futuro.
 
-The code is currently written in Portuguese, but I will be partially transitioning it to English to enable new contributors to participate in the project in the future.
+## Observações
 
-## Notes
+Se este repositório está ativo, significa que o projeto foi concluído e está utilizando as tecnologias mencionadas de forma eficaz. Para ver a aplicação em ação, você pode visitar o seguinte link:
 
-If this repository is active, it means that the project has been completed and is utilizing the mentioned technologies effectively. To see the application in action, you can visit the following link:
-
-[CAE Production Application](https://sistema-cae-v5-ecab78bbbd3c.herokuapp.com/)
-
-## Tags
-
-**Tags**: #Django #S3 #Heroku #django-storages #boto3 #storage #academic management #web application #completed project
+[Aplicação de Produção do CAE](https://sistema-cae-v5-ecab78bbbd3c.herokuapp.com/)
 
