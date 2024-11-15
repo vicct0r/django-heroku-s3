@@ -26,7 +26,8 @@ urlpatterns = [
     path('lockers/', include('armarios.urls')),
     path('administracao/', include('professor.urls')),
     path('', include('core.urls')),
-    path('eventos/', include('eventos.urls'))
+    path('eventos/', include('eventos.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ] 
 
 if settings.DEBUG:

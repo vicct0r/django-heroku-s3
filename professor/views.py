@@ -19,6 +19,7 @@ class ListagemAlunos(LoginRequiredMixin, UserProfilePictureMixin, HasRoleMixin, 
     allowed_roles = 'professor'
     template_name = 'lista_alunos.html'
     model = AlunoModel
+    paginate_by = 10 # paginação dos alunos
     context_object_name = 'alunos'
 
 
@@ -32,7 +33,7 @@ class DetalheAluno(LoginRequiredMixin, UserProfilePictureMixin, HasRoleMixin, De
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
-        emprestimo = Emprestimo.objects.filter(usuario=user)
+        emprestimo = Emprestimo.objects.filter(usuario=user).select_related('armario')
         context['emprestimo'] = emprestimo
         return context
 

@@ -17,7 +17,7 @@ class ArmariosView(LoginRequiredMixin, UserProfilePictureMixin, ListView):
         
         # O usuario é composição de emprestimo
         # Inserindo 'emprestimo' no context para eu coletar todos emprestimos que user possui.
-        emprestimos = Emprestimo.objects.filter(usuario=user)
+        emprestimos = Emprestimo.objects.filter(usuario=user).select_related('armario')
         context['emprestimos'] = emprestimos
         return context
 

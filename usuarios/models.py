@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from stdimage import StdImageField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rolepermissions.roles import assign_role
 import uuid
 
 
@@ -13,7 +16,6 @@ def get_file_path(_instance, filename):
 class CustomUser(AbstractUser):
     pass
     
-    multado = models.BooleanField('Multado', default=False)
     nome_completo = models.CharField('Nome Completo', max_length=40)
     is_ativo = models.BooleanField('Ativo?', default=False, editable=False)
     is_funcionario = models.BooleanField('Funcionario?', default=False, editable=False)
@@ -89,3 +91,16 @@ class ProfessorModel(models.Model):
     class Meta:
         verbose_name = 'Professor'
         verbose_name_plural = 'Professores'
+
+
+@receiver(post_save, sender=CustomUser)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        if "@" in instance.username:
+            assign_role(instance, 'professor')
+            instance.is_funcionario = True
+            instance.save()
+            ProfessorModel.objects.create(usuario=instance)
+        else:
+            assign_role(instance, 'aluno')
+            AlunoModel.objects.create(usuario=instance)

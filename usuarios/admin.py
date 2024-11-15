@@ -18,4 +18,4 @@ class UsuarioCustomUserAdmin(UserAdmin):
     add_form = CadastroUsuarioForm
     form = CadastroUsuarioChangeForm
     model = CustomUser
-    list_display = ['username', 'nome_completo', 'is_ativo', 'multado']
+    list_display = ['username', 'nome_completo', 'is_ativo']
