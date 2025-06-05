@@ -7,135 +7,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Centro de Atendimento ao Estudante (CAE){% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        /* Faz o body ocupar toda a altura da página e usa flexbox para estruturar o layout */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* O conteúdo principal deve se expandir para ocupar o espaço disponível */
-        main {
-            flex: 1;
-        }
-
-        /* Garante que todos os cards tenham a mesma altura */
-        .card {
-            display: flex;
-            flex-direction: column;
-            height: 350px;
-            /* Ajuste a altura do card para acomodar a nova altura da imagem */
-        }
-
-        .card-img-top {
-            width: 250px;
-            /* Define a largura da imagem */
-            height: 250px;
-            /* Define a altura da imagem */
-            object-fit: cover;
-            /* Ajusta a imagem para cobrir o espaço sem distorção */
-            margin: 0 auto;
-            /* Centraliza a imagem horizontalmente */
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <!-- Navbar Compacto e Moderno -->
+    <nav class="navbar navbar-expand-lg navbar-cae sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'index' %}">
-                <img src="{% static 'images/geo.png' %}" alt="Logo" style="height: 40px;">
+                <img src="{% static 'images/geo.png' %}" alt="Logo CAE">
+                CAE
             </a>
-            <!-- Botão de toggle para o menu colapsável -->
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon text-white"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{% url 'index' %}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="{% url 'lista_armarios' %}">Armários</a>
-                    </li>
-                    {% if user|has_role:'aluno' %}
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Atendimento</a>
-                    </li>
-                    {% elif user|has_role:'professor' %}
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="{% url 'admin_home' %}">Admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Atendimento</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my_profile' pk=user.pk %}">
-                            {% if profile and profile.img %}
-                            <img src="{{ profile.img.url }}" alt="User Icon" class="rounded-circle" width="30" height="30">
-                            {% else %}
-                            <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                            <span class="text-light ms-1">Perfil</span>
-                            {% endif %}
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">
+                            <i class="fas fa-home me-1"></i> Início
                         </a>
                     </li>
                     <li class="nav-item">
-                        <form action="{% url 'logout' %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link text-light">
-                                <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
-                                <span class="ms-1">Sair</span>
-                            </button>
-                        </form>
+                        <a class="nav-link {% if 'armarios' in request.path %}active{% endif %}" href="{% url 'lista_armarios' %}">
+                            <i class="fas fa-lock me-1"></i> Armários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-headset me-1"></i> Atendimento
+                        </a>
+                    </li>
+                    {% if user|has_role:'professor' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_home' %}">
+                            <i class="fas fa-cog me-1"></i> Admin
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if profile and profile.img %}
+                            <img src="{{ profile.img.url }}" alt="User Icon" class="profile-icon">
+                            {% else %}
+                            <i class="fas fa-user-circle me-1"></i>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'my_profile' pk=user.pk %}">
+                                <i class="fas fa-user me-2"></i> Meu Perfil
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Sair
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
                 {% else %}
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="{% url 'cadastro' %}">Registrar</a>
+                        <a class="nav-link btn btn-sm btn-outline-light ms-2" href="{% url 'cadastro' %}">
+                            <i class="fas fa-user-plus me-1"></i> Registrar
+                        </a>
                     </li>
                 </ul>
                 {% endif %}
             </div>
         </div>
     </nav>
-    
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Centro de Atendimento ao Estudante</h1>
+                <p class="hero-subtitle">Aqui você encontra suporte e orientação acadêmica para tirar o melhor proveito de sua jornada na universidade.</p>
+                <div class="d-flex gap-2">
+                    <a href="#servicos" class="btn btn-light btn-lg px-4">Nossos Serviços</a>
+                    <a href="#eventos" class="btn btn-outline-light btn-lg px-4">Próximos Eventos</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <main role="main" class="container py-4">
         {% block content %}
 
-        <!-- Seção de Introdução (título e descrição sobre o CAE) -->
-        <section class="mb-5">
-            <h2 class="text-center">Bem-vindo ao Centro de Atendimento ao Estudante (CAE)</h2>
-            <p class="text-center">Aqui você encontra suporte e orientação acadêmica para tirar o melhor proveito de sua
-                jornada na universidade.</p>
-        </section>
-
-        <!-- Carousel -->
-        <section class="mb-5">
-            <div id="carouselExampleIndicators" class="carousel slide">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img class="d-block w-100"
-                            src="https://i.pinimg.com/originals/65/84/89/658489fa95a8b6b53e32e80a2f3e8993.jpg"
-                            alt="Primeiro slide">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Bem-vindo ao CAE</h5>
-                            <p>Ajudando você a encontrar as melhores soluções para suas necessidades acadêmicas.</p>
+        <!-- Cards de Serviços -->
+        <section id="servicos" class="mb-5">
+            <h2 class="section-title">Nossos Serviços</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="card-title">Material Complementar</h3>
+                            <p class="card-text">Acesso a conteúdo online exclusivo para todos os estudantes cadastrados em nossa plataforma.</p>
+                            <a href="{% url 'livros' %}" class="btn btn-primary">Acessar Materiais</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="card-title">Localize-nos</h3>
+                            <p class="card-text">Encontre nossas unidades, horários de atendimento e informações relevantes sobre nossos serviços.</p>
+                            <a href="#" class="btn btn-primary">Ver Localização</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 class="card-title">FAQ</h3>
+                            <p class="card-text">Tire suas dúvidas com nossa seção de perguntas e respostas sobre os serviços do CAE.</p>
+                            <a href="#" class="btn btn-primary">Ver Perguntas</a>
                         </div>
                     </div>
                 </div>
@@ -143,93 +160,121 @@
         </section>
 
         <!-- Seção de Eventos -->
-        <section class="mb-5">
-            <h2>Próximos Eventos</h2>
-            <div class="list-group">
+        <section id="eventos" class="mb-5">
+            <h2 class="section-title">Próximos Eventos</h2>
+            
+            {% if eventos %}
+            <div class="row">
                 {% for evento in eventos %}
-                <a href="{% url 'evento_detalhe' evento.pk %}"
-                    class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">{{ evento.nome }}</h5>
-                    <p class="mb-1"><strong>Local:</strong> {{ evento.local }}</p>
-                    <p class="mb-1"><strong>Data:</strong> {{ evento.data }}</p>
-                    <p class="mb-1"><strong>Duração:</strong> {{ evento.duracao }}</p>
-                </a>
-                {% empty %}
-                <p class="text-muted">Nenhum evento programado no momento.</p>
+                <div class="col-md-6">
+                    <div class="event-card">
+                        <div class="d-flex">
+                            <div class="event-date">
+                                <div>{{ evento.data|date:"d" }}</div>
+                                <div>{{ evento.data|date:"M" }}</div>
+                            </div>
+                            <div class="event-content flex-grow-1">
+                                <h4 class="event-title">{{ evento.nome }}</h4>
+                                <div class="event-meta">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{ evento.data|date:"H:i" }} - Duração: {{ evento.duracao }}</span>
+                                </div>
+                                <div class="event-meta">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ evento.local }}</span>
+                                </div>
+                                <a href="{% url 'evento_detalhe' evento.pk %}" class="btn btn-sm btn-outline-primary mt-2">
+                                    Detalhes e Inscrição
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
+            {% else %}
+            <div class="alert alert-info text-center">
+                <i class="fas fa-calendar-alt fa-2x mb-3"></i>
+                <h4>Nenhum evento programado no momento</h4>
+                <p class="mb-0">Fique atento às nossas redes sociais para novidades!</p>
+            </div>
+            {% endif %}
         </section>
 
-        <!-- Cards Informativos -->
-        <section class="container mb-5">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="{% static 'images/pasta.png' %}" class="card-img-top" alt="Ícone 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Material Complementar</h5>
-                            <p class="card-text">
-                                Dê uma olhada no conteúdo online que disponibilizamos para todos os convidados do site!
-                            </p>
-                            <a href="{% url 'livros' %}" class="btn btn-primary">Saiba Mais</a>
-                        </div>
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8 cta-content">
+                        <h3 class="cta-title">Ainda não faz parte da nossa comunidade?</h3>
+                        <p>Crie sua conta agora mesmo e aproveite diversos benefícios, como acesso exclusivo a materiais acadêmicos, suporte personalizado, e muito mais!</p>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="{% static 'images/gps.png' %}" class="card-img-top" alt="Ícone 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Localize-nos</h5>
-                            <p class="card-text">Mais detalhes sobre serviços, horários, aonde operamos, ou qualquer
-                                outra informação
-                                relevante.</p>
-                            <a href="#" class="btn btn-primary">Saiba Mais</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="{% static 'images/faq.png' %}" class="card-img-top" alt="Ícone 3">
-                        <div class="card-body">
-                            <h5 class="card-title">FAQ</h5>
-                            <p class="card-text">Participe da seção de perguntas e respostas da página para ficar por
-                                dentro dos bastidores!</p>
-                            <a href="#" class="btn btn-primary">Saiba Mais</a>
-                        </div>
+                    <div class="col-md-4 text-center cta-image">
+                        <img src="{% static 'images/jornal.png' %}" alt="Cadastro" width="80" class="mb-3">
+                        <a href="{% url 'cadastro' %}" class="btn cta-btn">
+                            <i class="fas fa-user-plus me-2"></i> Criar Conta
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
-
-        <section class="cta-section d-flex justify-content-between align-items-center">
-            <div class="row w-100">
-                <div class="col-8">
-                    <div class="cta-text">
-                        <h3>Ainda não tem uma conta?</h3>
-                        <p>Crie sua conta agora mesmo e aproveite diversos benefícios, como acesso exclusivo a materiais
-                            acadêmicos, suporte personalizado, e muito mais!</p>
-                    </div>
-                </div>
-                <div class="col-4 text-center">
-                    <div class="cta-image">
-                        <img src="{% static 'images/jornal.png' %}" style="width: 75px; height: 75px;"
-                            alt="Imagem de incentivo" class="mx-auto d-block">
-                        <div class="mt-3">
-                            <a href="{% url 'cadastro' %}" class="btn btn-success alert-success">Criar Conta</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
 
         {% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary text-light text-center py-3 mt-auto">
+    <footer class="footer">
         <div class="container">
-            <p class="mb-0">&copy; 2024 Centro de Atendimento ao Estudante. Todos os direitos reservados.</p>
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <img src="{% static 'images/geo.png' %}" alt="Logo CAE" class="footer-logo">
+                    <p class="text-light">O Centro de Atendimento ao Estudante oferece suporte completo para sua jornada acadêmica, com serviços que facilitam seu dia a dia na universidade.</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-title">Links Rápidos</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'index' %}">Início</a></li>
+                        <li><a href="{% url 'lista_armarios' %}">Armários</a></li>
+                        <li><a href="#">Atendimento</a></li>
+                        <li><a href="{% url 'livros' %}">Materiais</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-title">Contato</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> Av. Universitária, 123</li>
+                        <li><i class="fas fa-phone me-2"></i> (11) 9999-8888</li>
+                        <li><i class="fas fa-envelope me-2"></i> contato@cae.edu.br</li>
+                        <li><i class="fas fa-clock me-2"></i> Seg-Sex: 8h às 20h</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-4">
+                    <h5 class="footer-title">Newsletter</h5>
+                    <p class="text-light">Inscreva-se para receber novidades e eventos</p>
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Seu e-mail">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 Centro de Atendimento ao Estudante. Todos os direitos reservados.</p>
+            </div>
         </div>
     </footer>
 

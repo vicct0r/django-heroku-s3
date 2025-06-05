@@ -1,6 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db import OperationalError
 from armarios.models import Emprestimo
 from django.views.generic import TemplateView, UpdateView, DetailView, ListView, CreateView
 from usuarios.forms import CadastroUsuarioChangeForm
@@ -20,7 +21,11 @@ class IndexView(UserProfilePictureMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['eventos'] = Evento.objects.all()
+        try:
+            context['eventos'] = Evento.objects.all()
+        except OperationalError:
+            context['eventos'] = []
+        
         return context
 
 
