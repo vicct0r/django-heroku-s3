@@ -1,68 +1,71 @@
 from .base import *
-import django_heroku
-import dj_database_url
-import os
 
-# CONFIGURAÇÕES PARA DESENVOLVIMENTO EM PRODUÇÃO
+SECRET_KEY = env("SECRET_KEY")
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = env("DEBUG")
 
-DEBUG = False
+ALLOWED_HOSTS = ['.fly.dev']
 
-ALLOWED_HOSTS = ['*']
+CLOUDFLARE_R2_BUCKET=env("CLOUDFLARE_R2_BUCKET")
+CLOUDFLARE_R2_ACESS_KEY=env("CLOUDFLARE_R2_ACESS_KEY")
+CLOUDFLARE_R2_SECRET_KEY=env("CLOUDFLARE_R2_SECRET_KEY")
+CLOUDFLARE_R2_BUCKET_ENDPOINT=env("CLOUDFLARE_R2_BUCKET_ENDPOINT")
 
-# heroku database settings
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-
-# AWS S3 SETTINGS
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_FILE_OVERWRITE = False
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
-    }
+CLOUDFLARE_R2_CONFIG_OPTIONS = {
+    "bucket_name": CLOUDFLARE_R2_BUCKET,
+    "access_key": CLOUDFLARE_R2_ACESS_KEY,
+    "secret_key": CLOUDFLARE_R2_SECRET_KEY,
+    "endpoint_url": CLOUDFLARE_R2_BUCKET_ENDPOINT,
+    "default_acl": "public-read",
+    "signature_version": "s3v4"
 }
 
-# Heroku Loggin
-DEBUG_PROPAGATE_EXCEPTIONS = True
+# Django 4.2 staticfiles config
+# Estamos mandando em dois locais do mesmo bucket
+# Em caso de MEDIA muito grande, é uma boa ideia usar buckets diferentes
+STORAGES = {
+    "default": {
+        "BACKEND": "helpers.cloudfare.storages.MediaFileStorage", # django-storages[S3]
+        "OPTIONS": CLOUDFLARE_R2_CONFIG_OPTIONS
+    }, # default -> user file field uploads
+    "staticfiles": {
+        "BACKEND": "helpers.cloudfare.storages.StaticFileStorage", # django-storages
+        "OPTIONS": CLOUDFLARE_R2_CONFIG_OPTIONS
+    }
 
-# Esta configuração de Logging serve para que eu não veja os erros do Django no log do Heroku
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefm': "%d/%b/%Y %H:%M:%S"
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '{levelname} {message}',
+            'style': '{',
         },
-
     },
     'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',
         },
     },
     'loggers': {
-        'MYAPP': {
-            'handlers': ['console'],
+        'django': {
+            'handlers': ['file', 'console'],
             'level': 'DEBUG',
+            'propagate': True,
         },
-    }
+    },
 }
-
-
-# Heroku settings
-django_heroku.settings(locals(), staticfiles=False)
-

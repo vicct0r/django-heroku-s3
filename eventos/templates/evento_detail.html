@@ -1,34 +1,75 @@
 {% extends 'index.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock extra_css %}
 
 {% block title %}Evento {{ evento.nome }}{% endblock %}
-
 {% block content %}
-<div class="container mt-5">
+<div class="event-detail-container">
+    <div class="event-header">
+        <h1 class="event-title">{{ evento.nome }}</h1>
+        
+        <div class="event-meta">
+            <div class="meta-item">
+                <span class="meta-icon"><i class="fas fa-calendar-alt"></i></span>
+                <span>{{ evento.data|date:"d/m/Y H:i" }}</span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-icon"><i class="fas fa-clock"></i></span>
+                <span>{{ evento.duracao }} horas</span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-icon"><i class="fas fa-map-marker-alt"></i></span>
+                <span>{{ evento.local }}</span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-icon"><i class="fas fa-info-circle"></i></span>
+                <span class="status-badge status-{{ evento.status }}">
+                    {{ evento.get_status_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+    
     <div class="row">
-        <div class="col-md-4 mb-3">
-            <!-- Imagem da logo do evento -->
+        <div class="col-lg-4 mb-4">
             {% if evento.logo %}
-            <img src="{{ evento.logo.url }}" alt="Logo" class="img-fluid mx-auto d-block">
+            <img src="{{ evento.logo.url }}" alt="Logo do evento {{ evento.nome }}" class="event-logo">
             {% else %}
-            <p>Sem logo disponível</p>
+            <div class="no-logo">
+                <div class="text-center">
+                    <i class="fas fa-image fa-3x mb-3"></i>
+                    <p>Nenhuma imagem disponível</p>
+                </div>
+            </div>
             {% endif %}
         </div>
-        <div class="col-md-8">
-            <!-- Informações do evento -->
-            <h2>{{ evento.nome }}</h2>
-            <p><strong>Status:</strong> <span class="text-success">{{ evento.get_status_display }}</span></p>
-            <!-- Adicionando a classe text-break aqui -->
-            <p><strong>Descrição:</strong> <span class="d-block text-break">{{ evento.descricao }}</span></p>
-            <p><strong>Local:</strong> {{ evento.local }}</p>
-            <p><strong>Data:</strong> {{ evento.data|date:"d/m/Y H:i" }}</p>
-            <p><strong>Duração:</strong> {{ evento.duracao }}</p>
-            <p><strong>Palestrantes:</strong>
-                {% if evento.palestrantes.exists %}
-                {{ evento.palestrantes.all|join:", " }}
-                {% else %}
-                Não há palestrantes cadastrados.
-                {% endif %}
-            </p>
+        
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <h3 class="h5 mb-3">Descrição do Evento</h3>
+                <div class="event-description">
+                    {{ evento.descricao|linebreaksbr }}
+                </div>
+            </div>
+            
+            {% if evento.palestrantes.exists %}
+            <div class="speakers-section">
+                <h3 class="h5 mb-3">Palestrantes</h3>
+                <div class="speakers-list">
+                    {% for palestrante in evento.palestrantes.all %}
+                    <span class="speaker-badge">
+                        <i class="fas fa-user-tie me-1"></i>
+                        {{ palestrante }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

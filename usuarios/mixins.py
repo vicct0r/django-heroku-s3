@@ -5,6 +5,9 @@ class UserProfilePictureMixin:
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
+        if user.is_superuser:
+            return context
+
         if user.is_authenticated:
                 if user.is_funcionario:
                     profile = ProfessorModel.objects.get(usuario=user)

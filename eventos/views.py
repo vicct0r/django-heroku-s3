@@ -14,9 +14,7 @@ class EventoDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'evento'
 
 
-# Parte de admin (para professores apenas)
-class EventoListView(LoginRequiredMixin, HasRoleMixin, ListView):
-    allowed_roles = 'professor'
+class EventoListView(LoginRequiredMixin, ListView):
     template_name = 'evento_admin.html'
     model = Evento
     context_object_name = 'eventos'

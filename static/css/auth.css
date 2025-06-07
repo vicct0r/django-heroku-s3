@@ -1,0 +1,161 @@
+/* ========== ESTILOS ESPECÍFICOS PARA AUTENTICAÇÃO ========== */
+.auth-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.auth-container {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 100%;
+    margin: 2rem auto;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 2rem;
+    text-align: center;
+    color: white;
+}
+
+.auth-header h2 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+.auth-body {
+    padding: 2rem;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.auth-form .form-control {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.auth-form .form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+}
+
+.auth-footer {
+    padding: 0 2rem 2rem;
+    text-align: center;
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.auth-footer a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+.btn-auth {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(26, 86, 219, 0.15);
+}
+
+.btn-auth:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(26, 86, 219, 0.2);
+}
+
+/* Container para campos com toggle de senha */
+.password-toggle-container {
+    position: relative;
+}
+
+.password-toggle-container .form-control {
+    padding-right: 40px; /* Espaço para o ícone */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    background: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.password-toggle-icon:hover {
+    color: var(--primary-color);
+}
+
+.password-toggle-icon i {
+    font-size: 18px;
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+/* Mensagens de erro */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.5rem;
+    color: #ef4444;
+    font-size: 0.85rem;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .auth-container {
+        margin: 1rem;
+    }
+    
+    .auth-header, .auth-body {
+        padding: 1.5rem;
+    }
+}

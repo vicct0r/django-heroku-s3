@@ -4,13 +4,6 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Alunos</h2>
-    {% for message in messages %}
-        {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-                <strong>{{ message }}</strong>
-            </div>
-        {% endif %}
-    {% endfor %}
     <table class="table table-bordered">
         <thead>
             <tr>

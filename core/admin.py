@@ -3,4 +3,4 @@ from .models import Livros
 
 @admin.register(Livros)
 class LivrosAdmin(admin.ModelAdmin):
-    fields = ['nome']
+    fields = ['nome', 'arquivo', 'foto_livro']

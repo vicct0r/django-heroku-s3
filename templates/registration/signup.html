@@ -1,0 +1,116 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-container">
+    <div class="auth-header">
+      <h2>Crie sua Conta</h2>
+      <p>Junte-se a nós e comece sua jornada</p>
+    </div>
+
+    <div class="auth-body">
+      <form method="post" class="auth-form">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="alert alert-danger mb-4">
+          <strong>Erro no cadastro!</strong> Por favor, corrija os seguintes problemas:
+          <ul class="mt-2 mb-0">
+            {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- Campos do CustomUser -->
+        <div class="form-group">
+          <label for="id_username">Nome de Usuário</label>
+          <input type="text" name="username" id="id_username" class="form-control"
+            value="{{ form.username.value|default:'' }}" placeholder="Escolha um nome de usuário" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="id_nome_completo">Nome Completo</label>
+          <input type="text" name="nome_completo" id="id_nome_completo" class="form-control"
+            value="{{ form.nome_completo.value|default:'' }}" placeholder="Seu nome completo" required>
+        </div>
+
+        <!-- Campos de senha -->
+        <div class="form-group">
+          <label for="id_password1">Senha</label>
+          <div class="password-toggle-container">
+            <input type="password" name="password1" id="id_password1" class="form-control"
+              placeholder="Crie uma senha forte" required>
+            <button type="button" class="password-toggle-icon" aria-label="Mostrar senha">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_password2">Confirmação de Senha</label>
+          <div class="password-toggle-container">
+            <input type="password" name="password2" id="id_password2" class="form-control"
+              placeholder="Confirme sua senha" required>
+            <button type="button" class="password-toggle-icon" aria-label="Mostrar senha">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group mt-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="terms" required>
+            <label class="form-check-label" for="terms">
+              Concordo com os <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>
+            </label>
+          </div>
+        </div>
+
+        <!-- BOTÃO DE SUBMIT QUE ESTAVA FALTANDO -->
+        <button type="submit" class="btn-auth mt-2">Cadastrar</button>
+      </form>
+    </div>
+
+    <div class="auth-footer">
+      <p class="mb-0">
+        Já tem uma conta? <a href="{% url 'login' %}">Faça login aqui</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Toggle de visibilidade de senha
+    const toggleIcons = document.querySelectorAll('.password-toggle-icon');
+
+    toggleIcons.forEach(icon => {
+      icon.addEventListener('click', function () {
+        const container = this.closest('.password-toggle-container');
+        const input = container.querySelector('input');
+        const iconElement = this.querySelector('i');
+
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+
+        iconElement.classList.toggle('fa-eye');
+        iconElement.classList.toggle('fa-eye-slash');
+
+        // Atualizar aria-label
+        const label = type === 'password' ? 'Mostrar senha' : 'Ocultar senha';
+        this.setAttribute('aria-label', label);
+      });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/auth_profile.css' %}">{% endblock extra_css %}
+
+{% block content %}
+<div class="user-profile-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Perfil do Usuário</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Seção de Informações Básicas -->
+                            <div class="mb-4">
+                                <h5 class="section-title mb-3">Informações Pessoais</h5>
+                                
+                                <div class="row">
+                                    <!-- Foto de Perfil -->
+                                    <div class="col-md-4 mb-3 mb-md-0 text-center">
+                                        <div class="profile-picture-container">
+                                            {% if form1.instance.img %}
+                                                <img id="profile-picture" src="{{ form1.img.url }}" 
+                                                     alt="Foto de perfil" class="img-thumbnail mb-2">
+                                            {% else %}
+                                                <img id="profile-picture" src="{% static 'images/default-profile.png' %}" 
+                                                     alt="Foto de perfil" class="img-thumbnail mb-2">
+                                            {% endif %}
+                                            <div class="d-grid">
+                                                {{ aluno_form.img }}
+                                                <label for="{{ form1.img.id_for_label }}" class="btn btn-outline-primary btn-sm mt-2">
+                                                    <i class="bi bi-camera-fill"></i> Alterar Foto
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dados do Usuário -->
+                                    <div class="col-md-8">
+                                        <div class="row g-3">
+                                            <div class="col-md-12">
+                                                <label for="{{ user_form.username.id_for_label }}" class="form-label">Nome de usuário</label>
+                                                {{ user_form.username }}
+                                                <div class="invalid-feedback">
+                                                    Por favor, insira um nome de usuário válido.
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12">
+                                                <label for="{{ user_form.nome_completo.id_for_label }}" class="form-label">Nome completo</label>
+                                                {{ user_form.nome_completo }}
+                                                <div class="invalid-feedback">
+                                                    Por favor, insira seu nome completo.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Seção de Informações Acadêmicas -->
+                            <div class="mb-4">
+                                <h5 class="section-title mb-3">Informações Acadêmicas</h5>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="{{ aluno_form.curso.id_for_label }}" class="form-label">Curso</label>
+                                        {{ aluno_form.curso }}
+                                        <div class="invalid-feedback">
+                                            Por favor, selecione um curso.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="{{ aluno_form.turno.id_for_label }}" class="form-label">Turno</label>
+                                        {{ aluno_form.turno }}
+                                        <div class="invalid-feedback">
+                                            Por favor, selecione um turno.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botões de Ação -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="#" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Voltar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Salvar Alterações
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    // Preview da imagem quando o usuário selecionar uma nova
+    document.getElementById('{{ aluno_form.img.id_for_label }}').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-picture').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Validação do formulário
+    (function() {
+        'use strict';
+        
+        // Selecionar todos os forms que precisam de validação
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        // Loop sobre eles e prevenir submissão
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

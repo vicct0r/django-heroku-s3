@@ -3,7 +3,7 @@ import os
 
 # CONFIGURAÇÕES PARA DESENVOLVIMENTO LOCALHOST
 
-SECRET_KEY = 'django-insecure-za8lbt!ddvm^h@v)g)#7-2$%ttbd!f-nmvh3+jpt2lhm_3w-y*'
+SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = True
 

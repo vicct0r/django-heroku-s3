@@ -4,20 +4,6 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Armários Disponíveis</h2>
-
-    {% for message in messages %}
-        {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-                <strong>{{ message }}</strong>
-            </div>
-        {% endif %}
-        {% if message.tags == 'error' %}
-            <div class="alert alert-warning" role="alert">
-                <strong>{{ message }}</strong>
-            </div>
-        {% endif %}
-    {% endfor %}
-
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
