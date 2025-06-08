@@ -12,19 +12,31 @@ class CadastroUsuarioForm(UserCreationForm):
 class CadastroUsuarioChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'nome_completo']
+        fields = ['username', 'img', 'nome_completo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop('password')  # Remove o campo de senha
+        self.fields.pop('password')  
 
 class AlunoForm(forms.ModelForm):
     class Meta:
         model = AlunoModel
-        fields = ['img', 'curso', 'turno']
+        fields = ['curso', 'turno']
 
 
 class ProfessorForm(forms.ModelForm):
     class Meta:
         model = ProfessorModel
-        fields = ['img', 'especialidade']
+        fields = ['especialidade']
+
+
+class AlunoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = AlunoModel
+        fields = ['turno', 'curso']
+
+
+class ProfessorUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ProfessorModel
+        fields = ['especialidade']

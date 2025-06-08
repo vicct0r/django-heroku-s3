@@ -2,12 +2,11 @@ from django.shortcuts import render
 from django.contrib import messages
 from .models import Emprestimo, Armario
 from django.views.generic import ListView, View
-from usuarios.mixins import UserProfilePictureMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 
 
-class ArmariosView(LoginRequiredMixin, UserProfilePictureMixin, ListView):
+class ArmariosView(LoginRequiredMixin, ListView):
     template_name = 'listagem_armarios.html'
     model = Armario
 

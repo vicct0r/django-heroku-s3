@@ -1,11 +1,131 @@
 {% extends 'index.html' %}
-{% block title %}Formação{% endblock %}
+{% load static %}
 
 {% block content %}
-<h2>Selecione sua formação:</h2>
-<form action="." method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <!-- Cabeçalho -->
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">
+                            <i class="bi bi-person-badge me-2"></i>Perfil do Professor
+                        </h3>
+                        <span class="badge bg-light text-dark">
+                            {% if form.instance.pk %}Editar{% else %}Novo{% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Corpo do formulário -->
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Seção da Foto -->
+                        <div class="mb-4 p-3 border rounded">
+                            <h5 class="mb-3 text-primary">
+                                <i class="bi bi-camera me-2"></i>Foto de Perfil
+                            </h5>
+                            
+                            <div class="d-flex align-items-center">
+                                <div class="me-4">
+                                    {% if form.instance.img %}
+                                        <img src="{{ form.instance.img.url }}" 
+                                             class="img-thumbnail rounded-circle" 
+                                             style="width: 120px; height: 120px; object-fit: cover;"
+                                             id="img-preview">
+                                    {% else %}
+                                        <img src="{% static 'default/default_user.avif' %}" 
+                                             class="img-thumbnail rounded-circle" 
+                                             style="width: 120px; height: 120px; object-fit: cover;"
+                                             id="img-preview">
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <label class="form-label">Alterar foto</label>
+                                    <input type="file" class="form-control" 
+                                           name="{{ form.img.name }}" 
+                                           id="{{ form.img.id_for_label }}"
+                                           accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção de Dados Profissionais -->
+                        <div class="mb-4 p-3 border rounded">
+                            <h5 class="mb-3 text-primary">
+                                <i class="bi bi-mortarboard me-2"></i>Formação Acadêmica
+                            </h5>
+                            
+                            <div class="row g-3">
+                                <!-- Especialidade -->
+                                <div class="col-12">
+                                    <label for="{{ form.especialidade.id_for_label }}" class="form-label">
+                                        <i class="bi bi-star me-1"></i>Área de Especialização
+                                    </label>
+                                    <select class="form-select" 
+                                            id="{{ form.especialidade.id_for_label }}" 
+                                            name="{{ form.especialidade.name }}" required>
+                                        <option value="" disabled selected>Selecione sua especialidade</option>
+                                        {% for value, text in form.especialidade.field.choices %}
+                                            <option value="{{ value }}" {% if form.especialidade.value == value %}selected{% endif %}>
+                                                {{ text }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Por favor, selecione sua especialidade.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de ação -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Preview da imagem quando selecionar arquivo
+    document.getElementById('{{ form.img.id_for_label }}').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('img-preview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Validação do formulário
+    (function() {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 {% endblock %}

@@ -25,8 +25,8 @@
                                     <!-- Foto de Perfil -->
                                     <div class="col-md-4 mb-3 mb-md-0 text-center">
                                         <div class="profile-picture-container">
-                                            {% if form1.instance.img %}
-                                                <img id="profile-picture" src="{{ form1.img.url }}" 
+                                            {% if form.instance.img %}
+                                                <img id="profile-picture" src="{{ form.img.url }}" 
                                                      alt="Foto de perfil" class="img-thumbnail mb-2">
                                             {% else %}
                                                 <img id="profile-picture" src="{% static 'images/default-profile.png' %}" 
@@ -34,7 +34,7 @@
                                             {% endif %}
                                             <div class="d-grid">
                                                 {{ aluno_form.img }}
-                                                <label for="{{ form1.img.id_for_label }}" class="btn btn-outline-primary btn-sm mt-2">
+                                                <label for="{{ form.img.id_for_label }}" class="btn btn-outline-primary btn-sm mt-2">
                                                     <i class="bi bi-camera-fill"></i> Alterar Foto
                                                 </label>
                                             </div>

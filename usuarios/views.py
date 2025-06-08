@@ -1,11 +1,10 @@
-from django.shortcuts import render
-from .forms import CadastroUsuarioForm, AlunoForm, ProfessorForm, CadastroUsuarioChangeForm
-from django.views.generic import CreateView, UpdateView, RedirectView, FormView
+from django.shortcuts import render, redirect
+from .forms import CadastroUsuarioForm, AlunoForm, ProfessorForm, CadastroUsuarioChangeForm, AlunoUpdateForm, ProfessorUpdateForm
+from django.views.generic import CreateView, UpdateView, RedirectView, FormView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from .models import AlunoModel, ProfessorModel
-from .mixins import UserProfilePictureMixin
 from rolepermissions.roles import assign_role
 
 
@@ -35,22 +34,22 @@ class CadastroUsuarioView(CreateView):
         response = super().form_valid(form)
         user = self.object
 
-        if '@' in user.username or user.is_superuser:
+        if '@' in user.username:
             user.is_funcionario = True
             assign_role(user, 'professor')
             ProfessorModel.objects.create(usuario=user)
         else:
             assign_role(user, 'aluno')
             AlunoModel.objects.create(usuario=user)
+        user.save() # preciso disso aqui pra salvar is_funcionario
         
         messages.success(self.request, "Cadastro realizado com sucesso!")
-        user.save() # preciso disso aqui pra salvar is_funcionario
         return response
 
 
-class StudentFormView(LoginRequiredMixin, UserProfilePictureMixin, FormView):
+class StudentFormView(LoginRequiredMixin, UpdateView):
     model = AlunoModel
-    template_name = 'student_account_update.html'
+    template_name = 'student_form.html'
     form_class = AlunoForm
     success_url = reverse_lazy('index')
 
@@ -58,25 +57,15 @@ class StudentFormView(LoginRequiredMixin, UserProfilePictureMixin, FormView):
         user = self.request.user
         return AlunoModel.objects.get(usuario=user)
     
-    def post(self, request, *args, **kwargs):
-        form1 = self.get_form()
-        form2 = CadastroUsuarioChangeForm(request.POST)
-
-        if form1.is_valid() and form2.is_valid():
-            return self.form_valid(form1, form2)
-        else:
-            return self.form_invalid(form1, form2)
-        
-    def form_valid(self, form1, form2):
-        data1 = form1.cleaned_data
-        data2 = form2.cleaned_data
-        return super().form_valid(form1)
-    
-    def form_invalid(self, form1, form2):
-        return self.render_to_response(self.get_context_data(form=form1, form2=form2))
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.request.user
+        user.is_ativo = True
+        user.save()
+        return response
 
 
-class TeacherFormView(LoginRequiredMixin, UserProfilePictureMixin, FormView):
+class TeacherFormView(LoginRequiredMixin, FormView):
     model = ProfessorModel
     template_name = 'teacher_form.html'
     form_class = ProfessorForm
@@ -93,3 +82,44 @@ class TeacherFormView(LoginRequiredMixin, UserProfilePictureMixin, FormView):
         messages.info(self.request, "Informações salvas com sucesso!")
         user.save()
         return response
+
+
+class ProfileUpdateTemplateView(LoginRequiredMixin, TemplateView):
+    template_name = 'profile_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['user_form'] = CadastroUsuarioChangeForm(instance=user, prefix="user_form")
+
+        if user.is_funcionario:
+            instance = ProfessorModel.objects.get(usuario=user)
+            context['profile_form'] = ProfessorUpdateForm(instance=instance, prefix="profile_form")
+        else:
+            instance = AlunoModel.objects.get(usuario=user)
+            context['profile_form'] = AlunoUpdateForm(instance=instance, prefix="profile_form")
+        
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        user_form = CadastroUsuarioChangeForm(request.POST, request.FILES, instance=user, prefix='user_form')
+        
+        if user.is_funcionario:
+            profile = ProfessorModel.objects.get(usuario=user)
+            profile_form = ProfessorUpdateForm(request.POST, instance=profile, prefix='profile_form')
+        else:
+            profile = AlunoModel.objects.get(usuario=user)
+            profile_form = AlunoUpdateForm(request.POST, instance=profile, prefix='profile_form')
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('my_profile', pk=user.pk)
+    
+        context = {
+            "user_form": user_form,
+            "profile_form": profile_form
+        }
+
+        return render(request, self.template_name, context)

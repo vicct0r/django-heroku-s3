@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from usuarios.models import AlunoModel, CustomUser
-from usuarios.mixins import UserProfilePictureMixin
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rolepermissions.mixins import HasRoleMixin
@@ -15,14 +14,14 @@ class AdminProfessores(LoginRequiredMixin, HasRoleMixin, TemplateView):
     template_name = 'admin_home.html'
 
 
-class ListagemAlunos(LoginRequiredMixin, UserProfilePictureMixin, HasRoleMixin, ListView):
+class ListagemAlunos(LoginRequiredMixin, HasRoleMixin, ListView):
     allowed_roles = 'professor'
     template_name = 'lista_alunos.html'
     model = AlunoModel
     context_object_name = 'alunos'
 
 
-class DetalheAluno(LoginRequiredMixin, UserProfilePictureMixin, HasRoleMixin, DetailView):
+class DetalheAluno(LoginRequiredMixin, HasRoleMixin, DetailView):
     allowed_roles = 'professor'
     template_name = 'detalhe_aluno.html'
     model = AlunoModel
@@ -37,7 +36,7 @@ class DetalheAluno(LoginRequiredMixin, UserProfilePictureMixin, HasRoleMixin, De
         return context
 
 
-class EditarAlunoView(LoginRequiredMixin, UserProfilePictureMixin, HasRoleMixin, UpdateView):
+class EditarAlunoView(LoginRequiredMixin, HasRoleMixin, UpdateView):
     allowed_roles = 'professor'
     template_name = 'editar_aluno.html'
     model = AlunoModel

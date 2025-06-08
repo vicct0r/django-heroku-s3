@@ -4,71 +4,153 @@
 
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row">
-        {% for message in messages %}
-        {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-                <strong>{{ message }}</strong>
-            </div>
-        {% endif %}
-        {% if message.tags == 'error' %}
-            <div class="alert alert-warning" role="alert">
-                <strong>{{ message }}</strong>
-            </div>
-        {% endif %}
-        {% endfor %}
-        
-        <!-- Sidebar com a foto do perfil -->
-        <div class="col-md-4 text-center">
-            <div class="card">
-                <div class="card-body">
-                    <!-- Foto do usuário -->
-                    <img src="{{ profile.img.url }}" alt="Foto de {{ user.username }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;">
-                    <h4 class="card-title">{{ user.username }}</h4>
-                    <p class="text-muted">{{ usuario.is_funcionario }}</p> <!-- Exemplo de função do usuário -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row g-4">
+                <!-- Sidebar do perfil -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <!-- Foto do perfil -->
+                            <div class="position-relative mx-auto mb-3" style="width: 150px; height: 150px;">
+                                {% if user.img %}
+                                <img src="{{ user.img.url }}" alt="Foto de {{ user.username }}" 
+                                     class="img-fluid rounded-circle w-100 h-100 object-fit-cover border border-4 border-primary">
+                                {% else %}
+                                <div class="d-flex align-items-center justify-content-center rounded-circle bg-light text-primary w-100 h-100 border border-4 border-primary">
+                                    <i class="fas fa-user-circle fs-1"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <h3 class="h4 mb-1">{{ user.username }}</h3>
+                            <p class="text-muted mb-4">
+                                <i class="fas fa-{% if user.is_funcionario %}user-tie{% else %}user-graduate{% endif %} me-1"></i>
+                                {% if user.is_funcionario %}Funcionário{% else %}Estudante{% endif %}
+                            </p>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'account' %}" class="btn btn-primary rounded-pill">
+                                    <i class="fas fa-user-edit me-2"></i>Editar Conta
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Conteúdo principal com informações do usuário -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5>Informações do Perfil</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Informações pessoais -->
-                    <p><strong>Nome Completo:</strong> {{ user.nome_completo }}</p>
-                    <p><strong>Data de Cadastro:</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
-                    
-                    <!-- Informações específicas do perfil -->
-                    {% if user.is_funcionario %}
-                        <p><strong>Formação:</strong> {{ profile.especialidade }}</p>
-                    {% else %}
-                        <p><strong>Curso:</strong> {{ profile.curso }}</p>
-                        <p><strong>Turno:</strong> {{ profile.turno }}</p>
-                    {% endif %}
-                    
-                    <!-- Verificação de empréstimo -->
-                    <h5 class="mt-4">Chave: </h5>
-                    {% if emprestimo.exists %}
-                        <ul>
-                            {% for emp in emprestimo %}
-                                <li><strong>Prazo restante:</strong> {{ emp.prazo_devolucao }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted">Você não possui nenhum empréstimo no momento.</p>
-                    {% endif %}
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'student_form' user.pk %}" class="btn btn-primary">Editar Conta</a>
-                    <a href="#" class="btn btn-secondary">Editar Perfil</a>
+                
+                <!-- Informações do perfil -->
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informações do Perfil</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <!-- Informações básicas -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <h5 class="d-flex align-items-center text-primary mb-3">
+                                            <i class="fas fa-id-card me-2"></i>Dados Pessoais
+                                        </h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><strong>Nome Completo:</strong><br>{{ user.nome_completo }}</li>
+                                            <li class="mb-2"><strong>Data de Cadastro:</strong><br>{{ user.date_joined|date:"d/m/Y" }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Informações específicas -->
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <h5 class="d-flex align-items-center text-primary mb-3">
+                                            <i class="fas fa-{% if user.is_funcionario %}chalkboard-teacher{% else %}graduation-cap{% endif %} me-2"></i>
+                                            {% if user.is_funcionario %}Informações Profissionais{% else %}Informações Acadêmicas{% endif %}
+                                        </h5>
+                                        <ul class="list-unstyled">
+                                            {% if user.is_funcionario %}
+                                                <li class="mb-2"><strong>Formação:</strong><br>{{ profile.especialidade }}</li>
+                                            {% else %}
+                                                <li class="mb-2"><strong>Curso:</strong><br>{{ profile.curso }}</li>
+                                                <li class="mb-2"><strong>Turno:</strong><br>{{ profile.turno }}</li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Empréstimos -->
+                                <div class="col-12">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <h5 class="d-flex align-items-center text-primary mb-3">
+                                            <i class="fas fa-key me-2"></i>Chaves em Uso
+                                        </h5>
+                                        {% if emprestimo.exists %}
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Item</th>
+                                                            <th>Prazo Restante</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for emp in emprestimo %}
+                                                        <tr>
+                                                            <td>Chave {{ forloop.counter }}</td>
+                                                            <td>{{ emp.prazo_devolucao }}</td>
+                                                            <td><span class="badge bg-success">Ativo</span></td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% else %}
+                                            <div class="text-center py-3">
+                                                <i class="fas fa-key fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted">Você não possui nenhum empréstimo no momento.</p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .object-fit-cover {
+        object-fit: cover;
+    }
+    
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bg-light {
+        background-color: #f8fafc !important;
+    }
+    
+    .list-unstyled li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .list-unstyled li:last-child {
+        border-bottom: none;
+    }
+</style>
 
 {% endblock %}

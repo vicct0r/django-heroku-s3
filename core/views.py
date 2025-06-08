@@ -6,17 +6,15 @@ from armarios.models import Emprestimo
 from django.views.generic import TemplateView, FormView, DetailView, ListView, CreateView, UpdateView
 from usuarios.forms import CadastroUsuarioChangeForm
 from rolepermissions.mixins import HasRoleMixin
-from usuarios.mixins import UserProfilePictureMixin
 from eventos.models import Evento
 from .models import Livros
 from .forms import LivrosModelForm
 from django.urls import reverse, reverse_lazy
 from usuarios.models import ProfessorModel, AlunoModel, CustomUser
-from .forms import ProfessorUpdateForm, AlunoUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class IndexView(UserProfilePictureMixin, TemplateView):
+class IndexView(TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -30,7 +28,7 @@ class IndexView(UserProfilePictureMixin, TemplateView):
 
 
 # Sessão de Usuário
-class MyProfileView(LoginRequiredMixin, UserProfilePictureMixin, DetailView):
+class MyProfileView(LoginRequiredMixin, DetailView):
     template_name = 'my_profile.html'
     
     def get_context_data(self, **kwargs):
@@ -38,9 +36,6 @@ class MyProfileView(LoginRequiredMixin, UserProfilePictureMixin, DetailView):
         user = self.request.user
 
         context['emprestimo'] = Emprestimo.objects.filter(usuario=user)
-
-        if user.is_superuser:
-            pass
 
         if user.is_funcionario:
             profile = ProfessorModel.objects.get(usuario=user)
