@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for django-heroku-s3 on 2025-06-05T19:45:49-03:00
+# fly.toml app configuration file generated for sistema-cae-br on 2025-06-08T19:40:59-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'django-heroku-s3'
+app = 'sistema-cae-br'
 primary_region = 'gru'
 console_command = '/code/manage.py shell'
 
@@ -14,6 +14,7 @@ console_command = '/code/manage.py shell'
 
 [env]
   PORT = '8000'
+  LOGGING_LEVEL = "INFO"
 
 [http_service]
   internal_port = 8000
