@@ -1,0 +1,78 @@
+/* Estilos personalizados para as mensagens */
+.message-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 400px;
+    width: 100%;
+}
+
+.message-alert {
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 4s;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+.message-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex-grow: 1;
+}
+
+.message-alert.success {
+    background: linear-gradient(to right, #4ade80, #22c55e);
+    color: white;
+}
+
+.message-alert.error {
+    background: linear-gradient(to right, #f87171, #ef4444);
+    color: white;
+}
+
+.message-alert.warning {
+    background: linear-gradient(to right, #fbbf24, #f59e0b);
+    color: white;
+}
+
+.message-alert.info {
+    background: linear-gradient(to right, #60a5fa, #3b82f6);
+    color: white;
+}
+
+.close-message {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.close-message:hover {
+    color: white;
+}

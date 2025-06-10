@@ -9,20 +9,20 @@ from .models import Evento
 
 
 class EventoDetailView(LoginRequiredMixin, DetailView):
-    template_name = 'evento_detail.html'
+    template_name = 'eventos/evento_detail.html'
     model = Evento
     context_object_name = 'evento'
 
 
 class EventoListView(LoginRequiredMixin, ListView):
-    template_name = 'evento_admin.html'
+    template_name = 'eventos/evento_admin.html'
     model = Evento
     context_object_name = 'eventos'
 
 
 class EventoCreateView(LoginRequiredMixin, HasRoleMixin, CreateView):
     allowed_roles = 'professor'
-    template_name = 'evento_create.html'
+    template_name = 'eventos/evento_create.html'
     form_class = EventoForm
     success_url = reverse_lazy('evento_admin')
 
@@ -35,7 +35,7 @@ class EventoCreateView(LoginRequiredMixin, HasRoleMixin, CreateView):
 class EventoEditView(LoginRequiredMixin, HasRoleMixin, UpdateView):
     allowed_roles = 'professor'
     queryset = Evento.objects.all()
-    template_name = 'evento_update.html'
+    template_name = 'eventos/evento_update.html'
     form_class = EventoForm
     success_url = reverse_lazy('evento_admin')
 

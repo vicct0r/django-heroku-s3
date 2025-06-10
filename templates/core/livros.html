@@ -1,0 +1,199 @@
+{% extends 'index.html' %}  
+
+{% block content %}
+<div class="container py-5">
+    <!-- Cabeçalho com título e botão de adicionar -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="display-5 fw-bold text-primary">Biblioteca Digital</h1>
+            <p class="lead text-muted">Explore nossa coleção de materiais acadêmicos disponíveis para download</p>
+        </div>
+        {% if user.is_funcionario %}
+        <a href="{% url 'livros_add' %}" class="btn btn-primary btn-lg d-flex align-items-center">
+            <i class="fas fa-plus-circle me-2"></i> Adicionar Livro
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Barra de pesquisa e filtros -->
+    <div class="row mb-4">
+        <div class="col-md-8 mb-3 mb-md-0">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="fas fa-search text-muted"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" placeholder="Pesquisar por título, autor ou assunto...">
+                <button class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select">
+                <option selected>Todos os assuntos</option>
+                <option>Matemática</option>
+                <option>Física</option>
+                <option>Química</option>
+                <option>Biologia</option>
+                <option>História</option>
+                <option>Literatura</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Grid de livros -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for livro in livros %}
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                <div class="position-relative">
+                    {% if livro.foto_livro %}
+                    <img src="{{ livro.foto_livro.url }}" class="card-img-top" alt="{{ livro.nome }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                    <div class="book-placeholder bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <i class="fas fa-book-open fa-3x text-secondary"></i>
+                    </div>
+                    {% endif %}
+                    <div class="position-absolute top-0 end-0 mt-2 me-2">
+                        {% if livro.arquivo %}
+                        <span class="badge bg-success py-2 px-3">
+                            <i class="fas fa-file-pdf me-1"></i> Disponível
+                        </span>
+                        {% else %}
+                        <span class="badge bg-secondary py-2 px-3">
+                            <i class="fas fa-exclamation-circle me-1"></i> Indisponível
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">{{ livro.nome }}</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-user-circle me-2 text-muted"></i>
+                        <span class="text-muted">Autor: {{ livro.autor|default:"Desconhecido" }}</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tag me-2 text-muted"></i>
+                        <span class="badge bg-info">{{ livro.assunto|default:"Geral" }}</span>
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-white border-0 pt-0 pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        {% if livro.arquivo %}
+                        <a href="{{ livro.arquivo.url }}" class="btn btn-primary d-flex align-items-center">
+                            <i class="fas fa-download me-2"></i> Baixar
+                        </a>
+                        {% else %}
+                        <button class="btn btn-outline-secondary" disabled>
+                            <i class="fas fa-ban me-2"></i> Indisponível
+                        </button>
+                        {% endif %}
+                        
+                        {% if user.is_funcionario %}
+                        <div class="btn-group">
+                            <a href="{% url 'livros_update' livro.id %}" class="btn btn-sm btn-outline-warning d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{% url 'livros_delete' livro.id %}" method="post" onsubmit="return confirm('Tem certeza que deseja remover este livro?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-book fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted">Nenhum livro disponível no momento</h3>
+                <p class="lead">Nossa biblioteca digital está vazia no momento. Volte em breve!</p>
+                {% if user.is_funcionario %}
+                <a href="{% url 'livros_add' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus-circle me-2"></i> Adicionar Primeiro Livro
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Paginação -->
+    {% if livros.has_other_pages %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if livros.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ livros.previous_page_number }}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+            </li>
+            {% endif %}
+            
+            {% for i in livros.paginator.page_range %}
+            {% if livros.number == i %}
+            <li class="page-item active">
+                <span class="page-link">{{ i }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if livros.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ livros.next_page_number }}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<style>
+    .card {
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .book-placeholder {
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .card-footer {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+{% endblock %}

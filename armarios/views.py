@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 
 class ArmariosView(LoginRequiredMixin, ListView):
-    template_name = 'listagem_armarios.html'
+    template_name = 'armarios/home.html'
     model = Armario
 
     def get_context_data(self, **kwargs):

@@ -29,7 +29,7 @@ class IndexView(TemplateView):
 
 # Sessão de Usuário
 class MyProfileView(LoginRequiredMixin, DetailView):
-    template_name = 'my_profile.html'
+    template_name = 'core/my_profile.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,21 +51,21 @@ class MyProfileView(LoginRequiredMixin, DetailView):
 
 # Sessão de Livros
 class LivrosPDF(ListView):
-    template_name = 'livros.html'
+    template_name = 'core/livros.html'
     model = Livros
     context_object_name = 'livros'
 
 
 class LivrosCreate(LoginRequiredMixin, HasRoleMixin, CreateView):
     allowed_roles = 'professor'
-    template_name = 'livro_add.html'
+    template_name = 'core/livro_add.html'
     form_class = LivrosModelForm
     success_url = reverse_lazy('livros')
 
 
 class LivroUpdate(LoginRequiredMixin, HasRoleMixin, UpdateView):
     allowed_roles = 'professor'
-    template_name = 'livro_update.html'
+    template_name = 'core/livro_update.html'
     queryset = Livros.objects.all()
     form_class = LivrosModelForm
     success_url = reverse_lazy('livros')

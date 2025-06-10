@@ -49,7 +49,7 @@ class CadastroUsuarioView(CreateView):
 
 class StudentFormView(LoginRequiredMixin, UpdateView):
     model = AlunoModel
-    template_name = 'student_form.html'
+    template_name = 'usuarios/student_form.html'
     form_class = AlunoForm
     success_url = reverse_lazy('index')
 
@@ -62,12 +62,13 @@ class StudentFormView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         user.is_ativo = True
         user.save()
+        messages.info(self.request, "Informações salvas com sucesso!")
         return response
 
 
 class TeacherFormView(LoginRequiredMixin, FormView):
     model = ProfessorModel
-    template_name = 'teacher_form.html'
+    template_name = 'usuarios/teacher_form.html'
     form_class = ProfessorForm
     success_url = reverse_lazy('index')
 
@@ -79,13 +80,13 @@ class TeacherFormView(LoginRequiredMixin, FormView):
         response = super().form_valid(form)
         user = self.request.user
         user.is_ativo = True
-        messages.info(self.request, "Informações salvas com sucesso!")
         user.save()
+        messages.info(self.request, "Informações salvas com sucesso!")
         return response
 
 
 class ProfileUpdateTemplateView(LoginRequiredMixin, TemplateView):
-    template_name = 'profile_update.html'
+    template_name = 'usuarios/profile_update.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -115,6 +116,7 @@ class ProfileUpdateTemplateView(LoginRequiredMixin, TemplateView):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.success(self.request, "Dados alterados com sucesso!")
             return redirect('my_profile', pk=user.pk)
     
         context = {
